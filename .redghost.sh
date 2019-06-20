@@ -196,7 +196,7 @@ dialog --clear --nocancel --backtitle "Coded by d4rkst4t1c.." \
 --menu "Linux post exploitation framework and payload generator." 15 60 6 \
 Payloads "Generate Reverse Shells" \
 Crontab "Add cron job for persistence" \
-Clearlogs "Clear all logs (root)" \
+Clearlogs "Clear all logs" \
 MassinfoGrab "Gain recon on the system" \
 BanIP "Ban an IP Address" \
 Exit "" 2>"${INPUT}"
