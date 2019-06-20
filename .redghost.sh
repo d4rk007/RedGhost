@@ -93,7 +93,7 @@ function clearlog() {
 		export HISTFILE=
 		unset HISTFILE
 		rm -rf ~/.bash_history && ln -s ~/.bash_history /dev/null
-		touch ~/.bash_history
+		> ~/.bash_history
 		zsh% unset HISTFILE HISTSIZE
 		tcsh% set history=0
 		bash$ set +o history
