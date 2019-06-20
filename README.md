@@ -1,5 +1,5 @@
 # RedGhost
-Linux post expoitation framework designed to gain persistence and reconnaissance and leave no trace. 
+Linux post expoitation framework designed to assist red teams gaining persistence, reconnaissance and leaving no trace. 
 ![RG](https://user-images.githubusercontent.com/44454186/59851303-cfda2d80-935b-11e9-92f3-b466e549031c.PNG)
 - Paylods
 Function to generate various encoded reverse shells in
