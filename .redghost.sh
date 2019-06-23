@@ -10,7 +10,7 @@ function display_output(){
 		local r=${DIALOG_CANCEL=1}
 		dialog --title "${t}" --clear --msgbox "$(<$OUTPUT)" ${h} ${w}
 
-		}
+}
 
 
 function genpayload(){
@@ -37,6 +37,7 @@ function genpayload(){
 				chmod +x .shell.sh
 				echo -e "Payload saved as `pwd`/.shell.sh"
 				read -p "Press enter to continue "
+
 		}
 
 
@@ -95,6 +96,7 @@ function cron(){
 				cat command.txt
 				echo -e "\n"
 				read -p "Press enter to continue "
+
 		}
 
 
