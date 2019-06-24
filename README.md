@@ -1,6 +1,6 @@
 # RedGhost
 Linux post exploitation framework designed to assist red teams in gaining persistence, reconnaissance and leaving no trace. 
-![RG](https://user-images.githubusercontent.com/44454186/60026216-b4885e80-968a-11e9-8986-e25cf5922908.PNG)
+![RG](https://user-images.githubusercontent.com/44454186/60026380-fc0eea80-968a-11e9-8d56-d445b8ad6c4f.PNG)
 - Payloads
 Function to generate various encoded reverse shells in
 netcat, bash, python, php, ruby, perl
