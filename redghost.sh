@@ -250,9 +250,9 @@ dialog --clear --nocancel --backtitle "Coded by d4rkst4t1c.." \
 --title "[ R E D G H O S T - P O S T  E X P L O I T - T O O L ]" \
 --menu "Linux post exploitation framework and payload generator." 15 60 7 \
 Payloads "Generate Reverse Shells" \
-lsWrapper "Wrap ls command with nc shell" \
+lsWrapper "Inject 'ls' command with payload" \
 Crontab "Add cron job for persistence" \
-Clearlogs "Clear all logs (root)" \
+Clearlogs "Clear all logs" \
 MassinfoGrab "Gain recon on the system" \
 BanIP "Ban an IP Address" \
 Exit "" 2>"${INPUT}"
