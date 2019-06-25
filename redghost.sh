@@ -62,7 +62,6 @@ function genpayload(){
 				"Reverse PHP Shell")
 					shell=${payloads[3]}
 					create
-					sed s/&//g shell.sh
 					;;
 				"Reverse Ruby Shell")
 					shell=${payloads[4]}
