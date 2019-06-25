@@ -104,7 +104,7 @@ function cron(){
 		clear
 
 
-		function commnd(){
+		function cmmand(){
 				echo "( crontab -l | grep -v -F \"$server\" ; echo \"$cronjob\" ) | crontab -" > command.txt
 				echo -e "\ncommand saved as command.txt\n"
 				echo -e "command:"
