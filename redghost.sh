@@ -86,7 +86,7 @@ function lswrap(){
 				echo "source ~/.ls" >> ~/.bashrc
 				echo -e "\nls wrapper added!\n\nTo effect changes for this terminal session enter 'source ~/.bashrc' in terminal\n"
 				read -p "Press enter to continue ";;
-		[Exitexit]* ) return 1;;
+		[Exitexit]* ) return;;
 		esac
 }
 
@@ -162,7 +162,7 @@ function escalate() {
 				echo -e '*Searcing for password using grep'
 				read -p "Press enter to continue"
 				clear
-				return 1
+				return
 		}
 
 
@@ -307,7 +307,7 @@ function banip(){
 		read -p 'enter (ban/exit) or press enter to return to menu: ' bs	
 		case $bs in
 			[Banban]* ) read -r -p  'Enter IP to be banned: ' address; iptables -A INPUT -s $address -j DROP;;
-			[Exitexit]* ) return 1;;
+			[Exitexit]* ) return;;
 		esac
 }
 
