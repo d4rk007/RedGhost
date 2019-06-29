@@ -299,7 +299,6 @@ function info(){
 
 
 function banip(){
-		clear
 		sleep 1
 		echo -e '\nConnected IP Addresses:'
 		netstat -anpt | grep ESTABLISHED | awk '{ print $5 }' | cut -d: -f1 | sort -u
@@ -340,7 +339,7 @@ case $menuitem in
 	GetRoot) clear; escalate;; 
 	Clearlogs) clear; clearlog;;
 	MassinfoGrab) clear; info;;
-	BanIP) banip;;
+	BanIP) clear; banip;;
 	Exit) clear; break;;
 esac
 
