@@ -220,10 +220,10 @@ function clearlog(){
 		unset HISTFILE
 		rm -rf ~/.bash_history && ln -s ~/.bash_history /dev/null
 		touch ~/.bash_history
-		zsh% unset HISTFILE HISTSIZE
-		tcsh% set history=0
-		bash$ set +o history
-		ksh$ unset HISTFILE
+		unset HISTFILE HISTSIZE
+		set history=0
+		set +o history
+		unset HISTFILE
 		find / -type f -exec {}
 		echo "Logs cleared!"
 		sleep 1.5
