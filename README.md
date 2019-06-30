@@ -20,7 +20,9 @@ Function to BanIp
 - Prerequisites
 
 *dialog
+
 *gcc
+
 *iptables
 
 - Installation
