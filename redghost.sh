@@ -160,6 +160,7 @@ function escalate() {
 				echo -e '*Searching for password using find'
 				find . -type f -exec grep -i -I "PASSWORD" {{}} /dev/null \;
 				echo -e '*Searcing for password using grep'
+				grep --color=auto -rnw '/' -ie "PASSWORD" --color=always 2> /dev/null
 				read -p "Press enter to continue"
 				clear
 				return
