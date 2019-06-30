@@ -17,6 +17,6 @@ Function to grab mass information on system
 - BanIp
 Function to BanIp
 
--Installation:
+- Installation
 Enter this one liner in terminal to install:
 git clone https://github.com/d4rk007/RedGhost; apt-get install dialog; apt-get install gcc; apt-get install iptables; cd RedGhost; chmod +x redghost.sh; ./redghost.sh
