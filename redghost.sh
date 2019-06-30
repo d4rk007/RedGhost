@@ -69,7 +69,7 @@ function genpayload(){
 			["Reverse Perl Shell"]=create
 			["Return to main menu"]=return
 		)
-		prompt "Select Reverse Shell payload: " options dispatch_table
+		prompt "Select Reverse Shell payload" options dispatch_table
 }
 
 
@@ -120,7 +120,7 @@ function cron(){
 			["Return to main menu"]=return
 		)
 
-		prompt "Generate cron job payload dropper command or add cron job to this machine: " options dispatch_table
+		prompt "Generate cron job payload dropper command or add cron job to this machine" options dispatch_table
 }
 
 
@@ -210,7 +210,7 @@ function escalate() {
 			["Download and run LinEnum"]=lineum
 			["Return to main menu"]=return
 		)
-		prompt "How would you like to get root?: " options dispatch_table
+		prompt "How would you like to get root?" options dispatch_table
 }
 
 
