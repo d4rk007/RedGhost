@@ -9,7 +9,6 @@ function display_output(){
 		local h=${1-10}
 		local w=${2-41}
 		local t=${3-Output} 
-		local r=${DIALOG_CANCEL=1}
 		dialog --title "${t}" --clear --msgbox "$(<$OUTPUT)" ${h} ${w}
 }
 
