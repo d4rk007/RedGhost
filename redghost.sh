@@ -138,8 +138,8 @@ function escalate() {
 				"find / -mmin -10 2>/dev/null | grep -Ev '^/proc'"
 				"getcap -r / 2>/dev/null"
 				)
-				length=${#methods[@]}
 
+				length=${#methods[@]}
 				for (( i=0; i<${length}; i++ ));
 					do
 					$? 2>/dev/null
@@ -232,7 +232,6 @@ function clearlog(){
 
 function info(){
 		declare -a commands=(
-
 		"hostname -f;"
 		"ip addr show;"
 		"ip ro show"
@@ -284,7 +283,6 @@ function info(){
 		)
 
 		length=${#commands[@]}
-
 		for (( i=0; i<${length}; i++ ));
 			do
 			$? 2>/dev/null
