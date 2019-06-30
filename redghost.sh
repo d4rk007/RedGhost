@@ -14,7 +14,7 @@ function display_output(){
 }
 
 
-function prompt() {
+function prompt(){
     local PS3="$1: "
     local -n _options=$2 _dispatch=$3
     select opt in "${_options[@]}"; do
@@ -124,7 +124,7 @@ function cron(){
 }
 
 
-function escalate() {
+function escalate(){
 		function conmethods(){
 				echo -e "\n\tThis function attempts to:\n\nwrite \"$USER ALL=(ALL) NOPASSWD: ALL\" to /etc/sudoers\n*make every user root\n*read doas config\n*exploit docker bash container exploit*\n*To find suid\n*get last edited files\n*list all capabilities\n"
 				read -p "Press Enter to continue"
