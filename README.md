@@ -34,12 +34,12 @@ Linux post exploitation framework designed to assist red teams in persistence, r
 
 one liner to install RedGhost:
 ```
-wget https://raw.githubusercontent.com/d4rk007/RedGhost/master/redghost.sh
+wget https://raw.githubusercontent.com/d4rk007/RedGhost/master/redghost.sh; chmod +x redghost.sh; ./redghost.sh
 ```
 
 One liner to install reqrequisites and RedGhost:
 ```
-wget https://raw.githubusercontent.com/d4rk007/RedGhost/master/redghost.sh; apt-get install dialog; apt-get install gcc; apt-get install iptables; ./redghost.sh
+wget https://raw.githubusercontent.com/d4rk007/RedGhost/master/redghost.sh; chmod +x redghost.sh; apt-get install dialog; apt-get install gcc; apt-get install iptables; ./redghost.sh
 ```
 
 ### Prerequisites
