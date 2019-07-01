@@ -44,7 +44,7 @@ one liner to install RedGhost:
 wget https://raw.githubusercontent.com/d4rk007/RedGhost/master/redghost.sh; chmod +x redghost.sh; ./redghost.sh
 ```
 
-One liner to install preqrequisites and RedGhost:
+One liner to install prerequisites and RedGhost:
 ```
 wget https://raw.githubusercontent.com/d4rk007/RedGhost/master/redghost.sh; chmod +x redghost.sh; apt-get install dialog; apt-get install gcc; apt-get install iptables; ./redghost.sh
 ```
