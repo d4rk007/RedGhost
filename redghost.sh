@@ -14,14 +14,14 @@ function display_output(){
 
 
 function prompt(){
-    local PS3="$1: "
-    local -n _options=$2 _dispatch=$3
-    select opt in "${_options[@]}"; do
-        if [[ -v _dispatch["$opt"] ]]; then
-            "${_dispatch[$opt]}"
-            break
-        fi
-    done
+		local PS3="$1: "
+		local -n _options=$2 _dispatch=$3
+		select opt in "${_options[@]}"; do
+		    if [[ -v _dispatch["$opt"] ]]; then
+			"${_dispatch[$opt]}"
+			break
+		    fi
+	        done
 }
 
 
