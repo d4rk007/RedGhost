@@ -7,13 +7,13 @@ Linux post exploitation framework designed to assist red teams in persistence, r
 Function to generate various encoded reverse shells in
 netcat, bash, python, php, ruby, perl
 
-- SudoWrapper
+- SudoInject
 
 Function to inject sudo command with wrapper function to run a reverse root shell everytime "sudo" is run for privilege     escalataion
 
-- lsWrapper 
+- lsInject 
 
-Function to wrap the "ls" command with payload to run payload everytime "ls" is run for persistence
+Function to inject the "ls" command with a wrapper function to run payload everytime "ls" is run for persistence
 
 
 - Crontab
