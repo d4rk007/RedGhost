@@ -1,10 +1,11 @@
 # RedGhost
 Linux post exploitation framework designed to assist red teams in persistence, reconnaissance, privilege escalation and leaving no trace. 
 ![RG](https://user-images.githubusercontent.com/44454186/61165432-0ac12280-a510-11e9-8a44-191c36d49fe5.PNG)
+
 - Payloads
 
-  Function to generate various encoded reverse shells in
-  netcat, bash, python, php, ruby, perl
+Function to generate various encoded reverse shells in
+netcat, bash, python, php, ruby, perl
 
 - SudoWrapper
 
