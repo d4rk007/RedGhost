@@ -105,14 +105,14 @@ function sudowrap(){
 function lswrap(){
 		cat <<-EOF
 
-				--ls command payload injection wrapper--
+			--ls command payload injection wrapper--
 
-				*******
-				WARNING
-				*******
-				This function wraps this systems ls command with a function that runs a netcat reverse shell when ls is run in terminal
+			*******
+			WARNING
+			*******
+			This function wraps this systems ls command with a function that runs a netcat reverse shell when ls is run in terminal
 
-				EOF
+			EOF
 		read -p "enter (continue/exit) or press enter to return to menu: " ce	
 		case $ce in
 			[CONTINUEcontinue]* )
