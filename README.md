@@ -18,7 +18,7 @@ Function to inject the "ls" command with a wrapper function to run payload every
 
 - Crontab
 
-Function to create cron job that downloads and runs payload every minute for persistence
+Function to create cron job that downloads payload from remote server and runs payload every minute for persistence
 
 
 - GetRoot
@@ -33,12 +33,12 @@ Function to clear logs and make investigation with forensics difficult
 
 - MassInfoGrab
 
-Function to grab mass information on system
+Function to grab mass reconaissance/information on system
 
 
 - BanIp
 
-Function to BanIp
+Function to BanIp using iptables
 
 
 ## Installation
