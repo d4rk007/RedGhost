@@ -83,6 +83,7 @@ sudowrap(){
 		for privilege escalation. (If this user is added to /etc/sudoers)
 		Wait for your target to log in and run sudo and you will receive a reverse root shell.
 		EOF
+
 	read -p "enter (continue/exit) or press enter to return to menu: " ce
 	case $ce in
 		[CONTINUEcontinue]* )
@@ -109,6 +110,7 @@ lswrap(){
 		*******
 		This function wraps this systems ls command with a function that runs a netcat reverse shell when ls is run in terminal
 		EOF
+
 	read -p "enter (continue/exit) or press enter to return to menu: " ce
 	case $ce in
 		[CONTINUEcontinue]* )
@@ -183,7 +185,7 @@ escalate(){
 
 			*list all capabilities
 
-		EOF
+			EOF
 		enter
 
 		declare -a methods=(
