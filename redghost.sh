@@ -203,10 +203,10 @@ escalate(){
 			$? 2>/dev/null
 			eval "${methods[method]}"
 			if (("$?" == 0)); then
-			echo -e "${methods[method]}\n[*] Method Succeded [*]\n"
-			sleep 1
+				echo -e "${methods[method]}\n[*] Method Succeded [*]\n"
+				sleep 1
 			else
-			echo -e "[*] Method Failed! [*]\n"
+				echo -e "[*] Method Failed! [*]\n"
 			fi
 		done
 	}
