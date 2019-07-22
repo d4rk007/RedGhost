@@ -1,6 +1,6 @@
 # RedGhost
 Linux post exploitation framework designed to assist red teams in persistence, reconnaissance, privilege escalation and leaving no trace. 
-![RG](https://user-images.githubusercontent.com/44454186/61423697-425d0f80-a900-11e9-9eaf-b17f07fc4cd2.PNG)
+![RG](https://user-images.githubusercontent.com/44454186/61614561-8d09bf00-ac53-11e9-85f2-cd2337d9ded1.PNG)
 
 - Payloads
 
