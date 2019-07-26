@@ -1,6 +1,6 @@
 # RedGhost
 Linux post exploitation framework designed to assist red teams in persistence, reconnaissance, privilege escalation and leaving no trace. 
-![RG](https://user-images.githubusercontent.com/44454186/61614561-8d09bf00-ac53-11e9-85f2-cd2337d9ded1.PNG)
+![RG](https://user-images.githubusercontent.com/44454186/61984209-e88cd180-aff2-11e9-82a1-1f0b34cb6f45.PNG)
 
 - Payloads
 
@@ -15,11 +15,17 @@ Function to inject sudo command with wrapper function to run a reverse root shel
 
 Function to inject the "ls" command with a wrapper function to run payload everytime "ls" is run for persistence
 
+- SSHKeyInject
+
+Function to log keystrokes of a ssh process using strace
 
 - Crontab
 
 Function to create cron job that downloads payload from remote server and runs payload every minute for persistence
 
+- SysTimer
+
+Function to create systemd timer that downloads and executes payload every 30 seconds for persistence.
 
 - GetRoot
 
