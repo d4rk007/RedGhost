@@ -475,7 +475,7 @@ dialog --clear --nocancel --backtitle "\Zb\Z0Coded by d4rkst4t1c.. v3.0" \
 Payloads "Generate Reverse Shells" \
 SudoInject "Inject 'sudo' to run payload as root" \
 lsInject "Inject 'ls' with payload" \
-SSHKeyInject "Log ssh process keystrokes" \
+SSHKeyInject "Read ssh process keystrokes" \
 Crontab "Add cron job for persistence" \
 SysTimer "Create systemd timer for persistence" \
 GetRoot "Escalate privileges" \
