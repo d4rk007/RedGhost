@@ -32,10 +32,10 @@ prompt(){
 	local -n _options=$2 _dispatch=$3
 	select opt in "${_options[@]}"; do
 		if [[ -v _dispatch["$opt"] ]]; then
-		"${_dispatch[$opt]}"
-		break
+			"${_dispatch[$opt]}"
+			break
 		fi
-		done
+	done
 }
 
 enter(){
