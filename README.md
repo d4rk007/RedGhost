@@ -68,6 +68,6 @@ One liner to install prerequisites and RedGhost:
 wget https://raw.githubusercontent.com/d4rk007/RedGhost/master/redghost.sh; chmod +x redghost.sh; apt-get install dialog; apt-get install gcc; apt-get install iptables; apt-get install strace; ./redghost.sh
 ```
 
-### Prerequisites
+### Dependencies
 
 dialog, gcc, iptables, strace
