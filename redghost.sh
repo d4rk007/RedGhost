@@ -469,41 +469,40 @@ banip(){
 
 while true
 do
-dialog --clear --nocancel --backtitle "\Zb\Z0Coded by d4rkst4t1c.. v3.0" \
---colors --title "\Zb\Z0[\Zb\Z1 R E D G H O S T \Zb\Z0- \Zb\Z1P O S T  E X P L O I T \Zb\Z0- \Zb\Z1T O O L \Zb\Z0]" \
---menu "Linux post exploitation framework and payload generator." 20 60 13 \
-Payloads "Generate Reverse Shells" \
-SudoInject "Inject 'sudo' to run payload as root" \
-lsInject "Inject 'ls' with payload" \
-SSHKeyInject "Read ssh process keystrokes" \
-Crontab "Add cron job for persistence" \
-SysTimer "Create systemd timer for persistence" \
-GetRoot "Escalate privileges" \
-Clearlogs "Clear all logs" \
-MassinfoGrab "Gain recon on the system" \
-CheckVM "Check if system is a virtual machine" \
-MemoryExec "Execute bash script in memory" \
-BanIP "Ban an IP Address" \
-Exit "" 2>"${INPUT}"
+	dialog --clear --nocancel --backtitle "\Zb\Z0Coded by d4rkst4t1c.. v3.0" \
+	--colors --title "\Zb\Z0[\Zb\Z1 R E D G H O S T \Zb\Z0- \Zb\Z1P O S T  E X P L O I T \Zb\Z0- \Zb\Z1T O O L \Zb\Z0]" \
+	--menu "Linux post exploitation framework and payload generator." 20 60 13 \
+	Payloads "Generate Reverse Shells" \
+	SudoInject "Inject 'sudo' to run payload as root" \
+	lsInject "Inject 'ls' with payload" \
+	SSHKeyInject "Read ssh process keystrokes" \
+	Crontab "Add cron job for persistence" \
+	SysTimer "Create systemd timer for persistence" \
+	GetRoot "Escalate privileges" \
+	Clearlogs "Clear all logs" \
+	MassinfoGrab "Gain recon on the system" \
+	CheckVM "Check if system is a virtual machine" \
+	MemoryExec "Execute bash script in memory" \
+	BanIP "Ban an IP Address" \
+	Exit "" 2>"${INPUT}"
 
-menuitem=$(<"${INPUT}")
+	menuitem=$(<"${INPUT}")
 
-case $menuitem in
-	Payloads) clear; genpayload;;
-	SudoInject) clear; sudowrap;;
-	lsInject) clear; lswrap;;
-	SSHKeyInject) clear; keyinject;;
-	Crontab) clear; cron;;
-	SysTimer) clear; systimer;;
-	GetRoot) clear; escalate;;
-	Clearlogs) clear; clearlog;;
-	MassinfoGrab) clear; info;;
-	CheckVM) clear; checkVM;;
-	MemoryExec) clear; memoryexec;;
-	BanIP) clear; banip;;
-	Exit) clear; break;;
-esac
-
+	case $menuitem in
+		Payloads) clear; genpayload;;
+		SudoInject) clear; sudowrap;;
+		lsInject) clear; lswrap;;
+		SSHKeyInject) clear; keyinject;;
+		Crontab) clear; cron;;
+		SysTimer) clear; systimer;;
+		GetRoot) clear; escalate;;
+		Clearlogs) clear; clearlog;;
+		MassinfoGrab) clear; info;;
+		CheckVM) clear; checkVM;;
+		MemoryExec) clear; memoryexec;;
+		BanIP) clear; banip;;
+		Exit) clear; break;;
+	esac
 done
 
 [ -f $OUTPUT ] && rm $OUTPUT
