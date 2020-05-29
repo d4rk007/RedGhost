@@ -506,6 +506,5 @@ do
 		Exit) clear; break;;
 	esac
 done
-
 [ -f $OUTPUT ] && rm $OUTPUT
 [ -f $INPUT ] && rm $INPUT
