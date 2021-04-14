@@ -129,7 +129,7 @@ lswrap(){
 	esac
 }
 
-keyinject(){
+keyread(){
 	if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		echo "SSH processes:"
 		ps aux | grep sshd | awk '{ print "ID: "$2" - "$11" "$12"\n" }' | grep -v 'grep\|sbin'
@@ -477,7 +477,7 @@ do
 	Payloads "Generate Reverse Shells" \
 	SudoInject "Inject 'sudo' to run payload as root" \
 	lsInject "Inject 'ls' with payload" \
-	SSHKeyInject "Read ssh process keystrokes" \
+	SSHKeyRead "Read ssh process keystrokes" \
 	Crontab "Add cron job for persistence" \
 	SysTimer "Create systemd timer for persistence" \
 	GetRoot "Escalate privileges" \
@@ -494,7 +494,7 @@ do
 		Payloads) clear; genpayload;;
 		SudoInject) clear; sudowrap;;
 		lsInject) clear; lswrap;;
-		SSHKeyInject) clear; keyinject;;
+		SSHKeyRead) clear; keyread;;
 		Crontab) clear; cron;;
 		SysTimer) clear; systimer;;
 		GetRoot) clear; escalate;;
